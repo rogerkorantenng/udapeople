@@ -17,10 +17,19 @@ commands:
       - run:
           name: Install Ansible v2
           command: |
-            sudo apt update && sudo apt upgrade -y
+            sudo apt update
             sudo apt install software-properties-common -y
             sudo add-apt-repository --yes --update ppa:ansible/ansible
             sudo apt install ansible -y
+
+  install_nodejs:
+    description: Install Node.js 13
+    steps:
+      - run:
+          name: Install Node.js 13
+          command: |
+            curl -fsSL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+            sudo apt-get install -y nodejs
 
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
@@ -213,10 +222,11 @@ jobs:
 
   run-migrations:
     docker:
-      - image: cimg/node:13.8.0
+      - image: cimg/base:stable
     steps:
       - checkout
       - install_awscli
+      - install_nodejs
       - run:
           name: Run migrations
           command: |
@@ -235,10 +245,11 @@ jobs:
 
   deploy-frontend:
     docker:
-      - image: cimg/node:13.8.0
+      - image: cimg/base:stable
     steps:
       - checkout
       - install_awscli
+      - install_nodejs
       - restore_cache:
           keys: [frontend-deps]
       - run:
@@ -268,11 +279,12 @@ jobs:
 
   deploy-backend:
     docker:
-      - image: cimg/node:13.8.0
+      - image: cimg/base:stable
     steps:
       - checkout
       - install_awscli
       - install_ansible
+      - install_nodejs
       - add_ssh_keys:
           fingerprints: ["d5:a4:0d:bd:36:a7:d2:03:2c:10:93:6a:7c:d1:a7:26"]
       - attach_workspace:
@@ -379,7 +391,7 @@ workflows:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
           filters:
             branches:
-              only: [master,experimental]
+              only: [master, experimental]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
       - run-migrations:
