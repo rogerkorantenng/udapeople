@@ -278,7 +278,7 @@ jobs:
 
       - add_ssh_keys:
           fingerprints:
-            - "12:ed:24:97:4a:cc:64:0a:0f:8d:c8:dd:ab:49:ca:4b"
+            - "5d:83:8d:1d:44:df:40:eb:0e:bc:f9:34:dd:52:df:3e"
 
       - run:
           name: Install dependencies
@@ -398,7 +398,7 @@ jobs:
 
       - add_ssh_keys:
           fingerprints:
-            - "12:ed:24:97:4a:cc:64:0a:0f:8d:c8:dd:ab:49:ca:4b"
+            - "5d:83:8d:1d:44:df:40:eb:0e:bc:f9:34:dd:52:df:3e"
 
       - run:
           name: Install dependencies
